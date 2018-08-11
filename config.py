@@ -9,6 +9,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
     SLOW_DB_QUERY_TIME = 0.5
+    BOOTSTRAP_QUERYSTRING_REVVING = '4.1.3'
+    BOOTSTRAP_USE_MINIFIED = True
+    BOOTSTRAP_SERVE_LOCAL = True
 
     @staticmethod
     def init_app(app):

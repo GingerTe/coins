@@ -17,10 +17,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-             <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav mr-auto">
                 {% for group in groups %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.coin_group', group=group.id) }}">
+                    <li class="nav-item" id="{{ group.id }}">
+                        <a class="nav-link" href="{{ url_for('main.coins', group_id=group.id) }}">
                             {{ group.shortname }}
                         </a>
                     </li>
@@ -64,9 +64,5 @@
 
         {% block page_content %}{% endblock %}
     </div>
-{% endblock %}
 
-{% block scripts %}
-    {{ super() }}
-    {#    {{ moment.include_moment() }}#}
 {% endblock %}
