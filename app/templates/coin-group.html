@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group.shortname }}{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h3>{{ group.name }}</h3>
+    </div>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>
+                Год
+            </th>
+            <th>
+                Монетный двор
+            </th>
+            <th>
+                Название
+            </th>
+            <th>
+                Описание
+            </th>
+            <th>
+                Наличие
+            </th>
+        </tr>
+        </thead>
+        {% for subgroup in group.children recursive %}
+            <tr>
+                <td colspan="5">{{ subgroup.shortname }}</td>
+
+                {% if subgroup.children %}
+                    <table class="subgroup">{{ loop(item.children) }}</table>
+                {% endif %}
+            </tr>
+            {% for coin in subgroup.coins %}
+                <tr>
+                    <td>
+                        {{ coin.year }}
+                    </td>
+                    <td>
+                        {{ coin.mint.abbr }}
+                    </td>
+                    <td>
+                        {{ coin.name }}
+                    </td>
+                    <td>
+                        {{ coin.description }}
+                    </td>
+                    <td>
+                        {{ coin.is_got }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+
+    </table>
+
+{% endblock %}

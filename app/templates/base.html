@@ -19,7 +19,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
              <ul class="navbar-nav mr-auto">
                 {% for group in groups %}
-                    <li class="nav-item"><a class="nav-link" href="#">{{ group.shortname }}</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.coin_group', group=group.id) }}">
+                            {{ group.shortname }}
+                        </a>
+                    </li>
                 {% endfor %}
 
                 {#{% if current_user.is_authenticated %}

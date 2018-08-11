@@ -35,6 +35,15 @@ def get_main_groups():
     return dict(groups=groups)
 
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/')
 def index():
     return render_template('index.html')
+
+
+@main.route('/coin-group/')
+def coin_group():
+    group_id = request.args.get('group')
+    if group_id is None:
+        return "", 400
+    group = CoinGroup.query.get_or_404(int(group_id))
+    return render_template('coin-group.html', group=group)
