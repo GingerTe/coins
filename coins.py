@@ -71,8 +71,8 @@ def deploy():
     # migrate database to latest revision
     upgrade()
 
-    # create or update user roles
-    Role.insert_roles()
-
-    # ensure all users are following themselves
-    User.add_self_follows()
+    # # create or update user roles
+    # Role.insert_roles()
+    #
+    # # ensure all users are following themselves
+    # User.add_self_follows()
