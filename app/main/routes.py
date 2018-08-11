@@ -1,6 +1,8 @@
 from flask import render_template, redirect, url_for, abort, request, current_app
 from flask_login import current_user
 from flask_sqlalchemy import get_debug_queries
+
+from app.models import CoinGroup
 from . import main
 from .. import db
 
@@ -27,7 +29,12 @@ def server_shutdown():
     return 'Shutting down...'
 
 
+@main.app_context_processor
+def get_main_groups():
+    groups = CoinGroup.query.filter_by(parent=None).order_by(CoinGroup.order).all()
+    return dict(groups=groups)
+
+
 @main.route('/', methods=['GET', 'POST'])
 def index():
-
-    return 'hello world'
+    return render_template('index.html')

@@ -11,6 +11,7 @@ class CoinGroup(db.Model):
     parent_id = db.Column(db.ForeignKey('coin_group.id'))
 
     parent = db.relationship('CoinGroup', remote_side=id, backref='children')
+    order = db.Column(db.Integer, nullable=False, server_default='0')
 
 
 class Mint(db.Model):
