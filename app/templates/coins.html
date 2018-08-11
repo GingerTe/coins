@@ -65,8 +65,9 @@
                             {{ coin.num }}
                         </td>
                         <td>
-                            <form action="{{ url_for('main.change_coin_got', coin_id=coin.id,
-                                             redirect=request.endpoint, group_id=group.id ) }}" method="post">
+                            <form class="form-inline" method="post"
+                                  action="{{ url_for('main.change_coin_got', coin_id=coin.id,
+                                             redirect=request.endpoint, group_id=group.id ) }}">
                                 <button type="submit" class="btn btn-link">
                                     {% if coin.is_got %}
                                         <i class="fas fa-minus fa-fw"></i>
@@ -75,8 +76,10 @@
 
                                     {% endif %}
                                 </button>
+                                <a href="{{ url_for('main.edit_coin', coin_id=coin.id) }}">
+                                    <i class="fa fa-pencil-alt fa-fw"></i>
+                                </a>
                             </form>
-                            <i class="fa fa-pencil-alt fa-fw"></i>
                         </td>
 
                     </tr>
