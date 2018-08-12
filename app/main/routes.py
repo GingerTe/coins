@@ -1,6 +1,7 @@
 import json
 
 from flask import render_template, redirect, url_for, abort, request, current_app, flash
+from flask_login import login_required
 from flask_sqlalchemy import get_debug_queries
 
 from app.main.forms import EditCoinForm
@@ -21,6 +22,7 @@ def after_request(response):
 
 
 @main.route('/shutdown')
+@login_required
 def server_shutdown():
     if not current_app.testing:
         abort(404)
@@ -38,17 +40,20 @@ def get_main_groups():
 
 
 @main.route('/')
+@login_required
 def index():
     return render_template('index.html')
 
 
 @main.route('/coins/<int:group_id>/', methods=['GET', 'POST'])
+@login_required
 def coins(group_id):
     group = CoinGroup.query.get_or_404(group_id)
     return render_template('coins.html', group=group)
 
 
 @main.route('/coin/<int:coin_id>/change-availability/', methods=['POST'])
+@login_required
 def change_coin_got(coin_id):
     coin = Coin.query.get_or_404(coin_id)
     coin.is_got = not coin.is_got
@@ -58,6 +63,7 @@ def change_coin_got(coin_id):
 
 
 @main.route('/coin/<int:coin_id>/', methods=['GET', 'POST'])
+@login_required
 def edit_coin(coin_id):
     form = EditCoinForm()
     coin = Coin.query.get_or_404(coin_id)
@@ -78,6 +84,7 @@ def edit_coin(coin_id):
 
 
 @main.route('/coin/new/', methods=['GET', 'POST'])
+@login_required
 def add_coin():
     form = EditCoinForm()
     coin = Coin()
