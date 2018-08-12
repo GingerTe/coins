@@ -42,7 +42,8 @@ def get_main_groups():
 @main.route('/')
 @login_required
 def index():
-    return render_template('index.html')
+    return render_template('index.html', total=Coin.query.count(),
+                           collected=Coin.query.filter_by(is_got=True).count())
 
 
 @main.route('/coins/<int:group_id>/', methods=['GET', 'POST'])
