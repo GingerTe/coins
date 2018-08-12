@@ -62,5 +62,5 @@ class Coin(db.Model):
     description_url = db.Column(db.Text)
     num = db.Column(db.Text)
     date = db.Column(db.Date)
-    is_got = db.Column(db.Integer, nullable=False, default=False)
+    is_got = db.Column(db.Boolean, nullable=False, server_default='false')
     group_id = db.Column(db.Integer, db.ForeignKey('coin_group.id'))
