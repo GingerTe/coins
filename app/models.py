@@ -7,10 +7,10 @@ class CoinGroup(db.Model):
     shortname = db.Column(db.String(100), unique=True)
 
     coins = db.relationship('Coin', lazy='select',
-                            backref=db.backref('group', lazy='joined'))
+                            backref=db.backref('group', lazy='joined'), order_by="Coin.id")
     parent_id = db.Column(db.ForeignKey('coin_group.id'))
 
-    parent = db.relationship('CoinGroup', remote_side=id, backref='children', order_by="CoinGroup.id")
+    parent = db.relationship('CoinGroup', remote_side=id, backref='children', order_by="CoinGroup.order")
     order = db.Column(db.Integer, nullable=False, server_default='0')
 
     def get_root(self, group=None):
