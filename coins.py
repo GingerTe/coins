@@ -37,9 +37,8 @@ def test(coverage):
         os.environ['FLASK_COVERAGE'] = '1'
         sys.exit(subprocess.call(sys.argv))
 
-    import unittest
-    tests = unittest.TestLoader().discover('tests')
-    unittest.TextTestRunner(verbosity=2).run(tests)
+    import pytest
+    pytest.main(['tests'])
     if COV:
         COV.stop()
         COV.save()

@@ -1,11 +1,30 @@
 {% extends 'base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Редактирование {{ coin.name }}{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <style>
+        .select2-container--default .select2-results__option .select2-results__option {
+            padding-left: 2em !important;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    {% if coin.name %}
+        Редактирование монеты "{{ coin.name }}"
+    {% else %}
+        Добавление новой монеты
+    {% endif %}
+{% endblock %}
 
 {% block page_content %}
     <div class="page-header">
-        <h1>Редактирование {{ coin.name }}</h1>
+        <h1>{% if coin.name %}
+            Редактирование монеты "{{ coin.name }}"
+        {% else %}
+            Добавление новой монеты
+        {% endif %}</h1>
     </div>
     {% for field in form.errors %}
         {% for error in form.errors[field] %}
@@ -19,4 +38,21 @@
     {% endfor %}
     {{ wtf.quick_form(form, form_type='horizontal') }}
 
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script>
+        {% if coin_group_data %}
+            $(document).ready(function () {
+                $('#group').select2({
+                    allowClear: true,
+                    data: JSON.parse({{ coin_group_data|tojson|safe }})
+                });
+            });
+        {% endif %}
+
+    </script>
 {% endblock %}

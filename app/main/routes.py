@@ -1,9 +1,10 @@
+import json
+
 from flask import render_template, redirect, url_for, abort, request, current_app, flash
-from flask_login import current_user
 from flask_sqlalchemy import get_debug_queries
 
 from app.main.forms import EditCoinForm
-from app.models import CoinGroup, Coin, Mint
+from app.models import CoinGroup, Coin
 from . import main
 from .. import db
 
@@ -47,48 +48,71 @@ def coins(group_id):
     return render_template('coins.html', group=group)
 
 
-@main.route('/coins/<int:coin_id>/change-availability/', methods=['POST'])
+@main.route('/coin/<int:coin_id>/change-availability/', methods=['POST'])
 def change_coin_got(coin_id):
     coin = Coin.query.get_or_404(coin_id)
     coin.is_got = not coin.is_got
     flash('Монета {} теперь {} наличии'.format(coin.name, coin.is_got and 'в' or 'не в'))
     db.session.commit()
-    return redirect(url_for(request.args['redirect'], group_id=request.args['group_id']))
+    return redirect(url_for('main.coins', group_id=coin.group.get_root().id))
 
 
 @main.route('/coin/<int:coin_id>/', methods=['GET', 'POST'])
 def edit_coin(coin_id):
+    form = EditCoinForm()
     coin = Coin.query.get_or_404(coin_id)
-    form = get_coin_form()
+
     if request.method == 'GET':
-        form.mint.data = coin.mint_id
-        form.name.data = coin.name
-        form.year.data = coin.year
-        form.description.data = coin.description
-        form.description_url.data = coin.description_url
-        form.num.data = coin.num
-        form.date.data = coin.date
-        form.is_got.data = coin.is_got
+        fill_form_from_model(coin, form)
 
     else:
         if form.validate_on_submit():
-            coin.mint_id = int(form.mint.data)
-            coin.name = form.name.data
-            coin.year = form.year.data
-            coin.description = form.description.data
-            coin.description_url = form.description_url.data
-            coin.num = form.num.data
-            coin.date = form.date.data
-            coin.is_got = form.is_got.data
+            fill_model_from_form(coin, form)
             db.session.commit()
             flash('Монета {} изменена'.format(coin.name))
             return redirect(url_for(request.endpoint, coin_id=coin_id))
 
-    return render_template('edit-coin.html', coin=coin, form=form)
+    return render_template('edit-coin.html', coin=coin, form=form,
+                           coin_group_data=json.dumps(CoinGroup.get_all_hierarchical(with_parent_duplication=True),
+                                                      ensure_ascii=False))
 
 
-def get_coin_form():
+@main.route('/coin/new/', methods=['GET', 'POST'])
+def add_coin():
     form = EditCoinForm()
+    coin = Coin()
 
-    form.mint.choices = [(str(mint.id), mint.abbr) for mint in (Mint.query.order_by(Mint.name).all())]
-    return form
+    if form.validate_on_submit():
+        fill_model_from_form(coin, form)
+        db.session.add(coin)
+        db.session.commit()
+        flash('Монета {} добавлена'.format(coin.name))
+        return redirect(url_for('main.coins', group_id=coin.group.get_root().id))
+
+    return render_template('edit-coin.html', coin=coin, form=form,
+                           coin_group_data=json.dumps(CoinGroup.get_all_hierarchical(with_parent_duplication=True),
+                                                      ensure_ascii=False))
+
+
+def fill_model_from_form(coin, form):
+    coin.mint_id = form.mint.data and int(form.mint.data) or None
+    coin.name = form.name.data
+    coin.year = form.year.data
+    coin.description = form.description.data
+    coin.description_url = form.description_url.data
+    coin.num = form.num.data
+    coin.date = form.date.data
+    coin.is_got = form.is_got.data
+    coin.group_id = form.group.data
+
+
+def fill_form_from_model(coin, form):
+    form.mint.data = coin.mint_id
+    form.name.data = coin.name
+    form.year.data = coin.year
+    form.description.data = coin.description
+    form.description_url.data = coin.description_url
+    form.num.data = coin.num
+    form.date.data = coin.date
+    form.is_got.data = coin.is_got
+    form.group.data = coin.group_id
