@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% import "_coin_macros.html" as macros %}
 
 {% block title %}{{ group.shortname }}{% endblock %}
 
@@ -35,6 +36,7 @@
                         </th>
                     </tr>
                     </thead>
+                    {{ macros.coin_widget(group) }}
                     {% for subgroup in group.children recursive %}
                         <tr>
                             <td colspan="7" align="center">
@@ -45,50 +47,7 @@
                                 <table class="subgroup">{{ loop(item.children) }}</table>
                             {% endif %}
                         </tr>
-                        {% for coin in subgroup.coins %}
-                            <tr class="{% if coin.is_got %}table-success{% endif %}">
-                                <td>
-                                    {% if coin.year %}{{ coin.year }} {% endif %}
-                                </td>
-                                <td>
-                                    <span title="{{ coin.mint.name }}">{{ coin.mint.abbr }}</span>
-                                </td>
-                                <td>
-                                    {% if coin.description_url %}
-                                        <a href="{{ coin.description_url }}" target="_blank">{{ coin.name }}</a>
-                                    {% else %}
-                                        {{ coin.name }}
-                                    {% endif %}
-
-                                </td>
-                                <td>
-                                    {{ coin.description }}
-                                </td>
-                                <td>
-                                    {% if coin.date %}{{ coin.date }} {% endif %}
-                                </td>
-                                <td>
-                                    {{ coin.num }}
-                                </td>
-                                <td>
-                                    <form class="form-inline" method="post"
-                                          action="{{ url_for('main.change_coin_got', coin_id=coin.id) }}">
-                                        <button type="submit" class="btn btn-link">
-                                            {% if coin.is_got %}
-                                                <i class="fas fa-minus fa-fw"></i>
-                                            {% else %}
-                                                <i class="fas fa-plus fa-fw"></i>
-
-                                            {% endif %}
-                                        </button>
-                                        <a href="{{ url_for('main.edit_coin', coin_id=coin.id) }}">
-                                            <i class="fa fa-pencil-alt fa-fw"></i>
-                                        </a>
-                                    </form>
-                                </td>
-
-                            </tr>
-                        {% endfor %}
+                        {{ macros.coin_widget(subgroup) }}
                     {% endfor %}
 
                 </table>
