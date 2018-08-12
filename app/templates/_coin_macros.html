@@ -2,27 +2,31 @@
     {% for coin in group.coins %}
         <tr class="{% if coin.is_got %}table-success{% endif %}">
             <td>
-                {% if coin.year %}{{ coin.year }} {% endif %}
+                {{ coin.year if coin.year }}
             </td>
             <td>
-                <span title="{{ coin.mint.name }}">{{ coin.mint.abbr }}</span>
+                {% if coin.mint %}
+                    <span title="{{ coin.mint.name }}">{{ coin.mint.abbr }}</span>
+                {% endif %}
             </td>
             <td>
                 {% if coin.description_url %}
-                    <a href="{{ coin.description_url }}" target="_blank">{{ coin.name }}</a>
+                    <a href="{{ coin.description_url }}" target="_blank">
+                        {{ coin.name if coin.name else coin.description_url }}
+                    </a>
                 {% else %}
-                    {{ coin.name }}
+                    {{ coin.name if coin.name }}
                 {% endif %}
 
             </td>
             <td>
-                {{ coin.description }}
+                {{ coin.description if coin.description }}
             </td>
             <td>
-                {% if coin.date %}{{ coin.date }} {% endif %}
+                {{ coin.date if coin.date }}
             </td>
             <td>
-                {{ coin.num }}
+                {{ coin.num if coin.num }}
             </td>
             <td>
                 <form class="form-inline" method="post"
