@@ -117,6 +117,7 @@ def fill_form_from_model(coin, form):
     form.mint.data = coin.mint_id
     form.name.data = coin.name
     form.year.data = coin.year
+    form.mint.data = str(coin.mint_id)
     form.description.data = coin.description
     form.description_url.data = coin.description_url
     form.num.data = coin.num
