@@ -4,68 +4,71 @@
 {% block title %}{{ group.shortname }}{% endblock %}
 
 {% block page_content %}
-    <div class="page-header">
-        <h3>{{ group.name }}</h3>
-    </div>
-    <div class="row">
-        <div class="col-11">
-            <div class="table-responsive">
-                <table class="table  table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">
-                            Год
-                        </th>
-                        <th scope="col">
-                            Монетный двор
-                        </th>
-                        <th scope="col">
-                            Название
-                        </th>
-                        <th scope="col">
-                            Описание
-                        </th>
-                        <th scope="col">
-                            Дата выпуска
-                        </th>
-                        <th scope="col">
-                            Тираж
-                        </th>
-                        <th scope="col">
-                            Действие
-                        </th>
-                    </tr>
-                    </thead>
-                    {{ macros.coin_widget(group) }}
-                    {% for subgroup in group.children recursive %}
-                        <tr>
-                            <td colspan="7" align="center">
-                                <h6>{{ subgroup.shortname }}</h6>
-                            </td>
+  <div class="page-header">
+    <h3>{{ group.name }}</h3>
+  </div>
+  <div class="row">
+    <div class="col-11">
+      <div class="table-responsive">
+        <table class="table  table-striped">
+          <thead>
+          <tr>
+            <th scope="col">
+              Год
+            </th>
+            <th scope="col">
+              Монетный двор
+            </th>
+            <th scope="col">
+              Название
+            </th>
+            <th scope="col">
+              Описание
+            </th>
+            <th scope="col">
+              Дата выпуска
+            </th>
+            <th scope="col">
+              Тираж
+            </th>
+            <th scope="col">
+              Действие
+            </th>
+          </tr>
+          </thead>
+          {{ macros.coin_widget(group) }}
+          {% for subgroup in group.children recursive %}
+            <tr>
+              <td colspan="7" align="center">
+                <h6>{{ subgroup.shortname }}</h6>
+              </td>
 
-                            {% if subgroup.children %}
-                                <table class="subgroup">{{ loop(item.children) }}</table>
-                            {% endif %}
-                        </tr>
-                        {{ macros.coin_widget(subgroup) }}
-                    {% endfor %}
+              {% if subgroup.children %}
+                <table class="subgroup">{{ loop(item.children) }}</table>
+              {% endif %}
+            </tr>
+            {{ macros.coin_widget(subgroup) }}
+          {% endfor %}
 
-                </table>
-            </div>
-        </div>
-        <div class="col-1" style="">
-            <a href="{{ url_for('main.add_coin', group_id=group.id) }}"><i class="fas fa-plus-circle fa-3x"></i></a>
-        </div>
+        </table>
+      </div>
     </div>
+    <div class="col-1" style="">
+      <a href="{{ url_for('main.add_coin', group_id=group.id) }}"><i class="fas fa-plus-circle fa-3x"></i></a>
+    </div>
+  </div>
 
 {% endblock %}
 
 
 {% block scripts %}
-    {{ super() }}
-    <script>
-        $(document).ready(function () {
-            $("#{{group.id}}").addClass("active");
-        })
-    </script>
+  {{ super() }}
+  <script>
+    {#$(document).ready(function () {
+      $(window.location.hash).animate({
+        color: "green",
+        backgroundColor: "rgb( 20, 20, 20 )"
+      }, 2000);
+    })#}
+  </script>
 {% endblock %}

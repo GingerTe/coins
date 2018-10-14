@@ -77,7 +77,7 @@ def edit_coin(coin_id):
             fill_model_from_form(coin, form)
             db.session.commit()
             flash('Монета {} изменена'.format(coin.name))
-            return redirect(url_for(request.endpoint, coin_id=coin_id))
+            return redirect_to_coin(coin)
 
     return render_template('edit-coin.html', coin=coin, form=form,
                            coin_group_data=json.dumps(CoinGroup.get_all_hierarchical(with_parent_duplication=True),
@@ -95,11 +95,15 @@ def add_coin():
         db.session.add(coin)
         db.session.commit()
         flash('Монета {} добавлена'.format(coin.name))
-        return redirect(url_for('main.coins', group_id=coin.group.get_root().id))
+        return redirect_to_coin(coin)
 
     return render_template('edit-coin.html', coin=coin, form=form,
                            coin_group_data=json.dumps(CoinGroup.get_all_hierarchical(with_parent_duplication=True),
                                                       ensure_ascii=False))
+
+
+def redirect_to_coin(coin):
+    return redirect(url_for('main.coins', group_id=coin.group.get_root().id, _anchor=coin.id))
 
 
 def fill_model_from_form(coin, form):

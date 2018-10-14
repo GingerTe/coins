@@ -1,6 +1,6 @@
 {% macro coin_widget(group) %}
     {% for coin in group.coins %}
-        <tr class="{% if coin.is_got %}table-success{% endif %}">
+        <tr id="{{ coin.id }}" class="{% if coin.is_got %}table-success{% endif %}">
             <td>
                 {{ coin.year if coin.year }}
             </td>
